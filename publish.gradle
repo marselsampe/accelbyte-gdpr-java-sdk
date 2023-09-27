@@ -44,3 +44,27 @@ publishing {
         }
     }
 }
+
+if ('publishToSonatype' in gradle.startParameter.taskNames) {
+    // https://github.com/gradle-nexus/publish-plugin/issues/81
+
+    apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
+    nexusPublishing {
+        repositories {
+            sonatype {
+                nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+                snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+                username = System.getenv("PUBLISH_OSSRH_USERNAME")
+                password = System.getenv("PUBLISH_OSSRH_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = System.getenv("PUBLISH_ASC_KEY")
+    def signingPassword = System.getenv("PUBLISH_ASC_KEY_PASSWORD")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+}
