@@ -29,20 +29,20 @@ Minimum Java version: Java 1.8
 ### Gradle
 ```shell
 dependencies {
-  implementation "net.accelbyte.gdpr:gdpr-sdk:1.0.0"
+  implementation "net.accelbyte.sdk:gdpr-sdk:1.0.0"
 }
 ```
 
 ### Maven
 ```shell
 <dependency>
-  <groupId>net.accelbyte.gdpr</groupId>
+  <groupId>net.accelbyte.sdk</groupId>
   <artifactId>gdpr-sdk</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
 
-[GDPR SDK jar downloads](https://search.maven.org/artifact/net.accelbyte.gdpr/gdpr-sdk/1.0.0/jar) are available from Maven Central.
+[GDPR SDK jar downloads](https://search.maven.org/artifact/net.accelbyte.sdk/gdpr-sdk/1.0.0/jar) are available from Maven Central.
 
 ## Usage
 

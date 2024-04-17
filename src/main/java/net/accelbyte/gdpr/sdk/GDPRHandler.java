@@ -13,14 +13,16 @@ public interface GDPRHandler {
      * Process data generation for the requested user.
      *
      * The concrete implementation should put the data result into "data" property inside DataGenerationResult object.
-     * The "data" property (inside DataGenerationResult object) was in form of Map<ModuleId, byte[]>,
+     * The "data" property (inside DataGenerationResult object) was in form of Map{ModuleId, byte[]},
      * this allows the concrete implementation to categorized multiple data based on the modules they have.
      * Example:
+     * <pre>{@code
      *  Map<ModuleId, byte[]> = {
      *    entitlement: entitlementData,
      *    wallet: walletData,
      *    transaction: transactionData
      *  }
+     *  }</pre>
      *
      * @param namespace             namespace of user
      * @param userId                user id
