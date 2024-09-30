@@ -90,9 +90,9 @@ GDPRService.SetHandler(myGDPRHandler);
 
 Start gRPC Server with [GDPRService](src/main/java/net/accelbyte/gdpr/sdk/GDPRService.java) class:
 ```java
-Server server = ServerBuilder
-        .forPort(8081)
-        .addService(new GDPRService()).build();
-server.start();
+ServerBuilder<?> serverBuilder = Grpc.newServerBuilderForPort(8081, InsecureServerCredentials.create());
+serverBuilder.addService(new GDPRService()).addService(ProtoReflectionService.newInstance());
+
+Server server = serverBuilder.build().start();
 server.awaitTermination();
 ```
