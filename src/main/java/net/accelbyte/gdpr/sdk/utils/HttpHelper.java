@@ -12,13 +12,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
 @Slf4j
 public class HttpHelper {
 
-    public static boolean uploadFile(String uploadUrl, byte[] data) throws IOException {
+    public static String uploadFile(String uploadUrl, byte[] data) throws IOException {
         HttpClient httpClient = HttpClients.custom().build();
         HttpPut put = new HttpPut(uploadUrl);
         HttpEntity entity = EntityBuilder.create()
@@ -28,12 +29,13 @@ public class HttpHelper {
         put.setHeader("Content-Type","application/zip");
 
         HttpResponse response = httpClient.execute(put);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            log.debug("Success upload file to uploadUrl [{}]", uploadUrl);
-            return true;
+        int responseCode = response.getStatusLine().getStatusCode();
+        if (responseCode == 200) {
+            return "";
         } else {
-            log.debug("Failed upload file to uploadUrl [{}]. Response code [{}]", uploadUrl, response.getStatusLine().getStatusCode());
-            return false;
+            String responseBody = response.getEntity() != null ? EntityUtils.toString(response.getEntity()): "";
+            return String.format("Failed upload file to uploadUrl [%s], Response code [%d], Response body: %s",
+                    uploadUrl, responseCode, responseBody.replaceAll("[\n\r\t]", ""));
         }
     }
 }

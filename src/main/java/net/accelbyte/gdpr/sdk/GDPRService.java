@@ -40,7 +40,7 @@ public class GDPRService extends GDPRGrpc.GDPRImplBase {
             log.info("[GDPRService.dataGeneration] start executing for namespace [{}] userId [{}]", request.getNamespace(), request.getUserId());
             try {
                 DataGenerationResult result = handler.ProcessDataGeneration(request.getNamespace(), request.getUserId(), request.getIsPublisherNamespace());
-                if (result == null || result.getData().size() == 0) {
+                if (result == null || result.getData().isEmpty()) {
                     log.info("[GDPRService.dataGeneration] result is empty for namespace [{}] userId [{}]", request.getNamespace(), request.getUserId());
                     responseBuilder.setSuccess(true);
                 } else {
@@ -49,8 +49,14 @@ public class GDPRService extends GDPRGrpc.GDPRImplBase {
                         log.info("[GDPRService.dataGeneration] result is empty for namespace [{}] userId [{}]", request.getNamespace(), request.getUserId());
                         responseBuilder.setSuccess(true);
                     } else {
-                        boolean successUpload = HttpHelper.uploadFile(request.getUploadUrl(), zipFileBytes);
-                        responseBuilder.setSuccess(successUpload);
+                        String errorMessage = HttpHelper.uploadFile(request.getUploadUrl(), zipFileBytes);
+                        if (Strings.isNullOrEmpty(errorMessage)) {
+                            log.debug("Success upload file to uploadUrl [{}]", request.getUploadUrl());
+                            responseBuilder.setSuccess(true);
+                        } else {
+                            log.error("[GDPRService.dataGeneration] error: {}", errorMessage);
+                            responseBuilder.setSuccess(false).setMessage(errorMessage);
+                        }
                     }
                 }
             } catch (Exception ex) {
